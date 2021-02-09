@@ -46,7 +46,7 @@ def login(client, username='admin', password='admin'):
 
 
 class TestImports:
-    @pytest.fixture(scope='session')
+    @pytest.fixture(scope='function')
     def client(self):
         app = create_app()
         app.testing = True
@@ -57,6 +57,7 @@ class TestImports:
         @db.event.listens_for(db.session, "after_transaction_end")
         def restart_savepoint(session, transaction):
             if transaction.nested and not transaction._parent.nested:
+                session.expire_all()
                 session.begin_nested()
 
         with app.app_context():
