@@ -42,8 +42,11 @@ def add_mapping(info_role):
     """
     data = request.get_json()
 
-    name = data.get('name') or None
+    name = data.get('name')
 
+    if name is None:
+        raise BadRequest(description="Vous devez donner un nom au mapping.")
+        
     # check if name already exists
     if name and db.session.query(TMappings.query.filter(TMappings.mapping_label == name).exists()).scalar():
         raise Conflict(description="Un mapping portant ce nom existe déjà")
@@ -117,9 +120,9 @@ def rename_mapping(info_role, id_mapping):
 
     data = request.get_json()
 
-    name = data['name']
+    name = data.get('name')
 
-    if not name:
+    if name is None:
         raise BadRequest(description="Vous devez donner un nom au mapping.")
         
     # FIXME: reusable mapping label between field and content mapping
