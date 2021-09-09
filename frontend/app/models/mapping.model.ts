@@ -26,3 +26,7 @@ export interface MappingContent {
     source_value: string;
     id_target_value: number; // better to have nomenclature label?
 }
+
+export interface MappingName {
+    name: string
+}

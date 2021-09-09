@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { AppConfig } from "@geonature_config/app.config";
 import { ModuleConfig } from "../module.config";
 import { Import, ImportError, ImportValues, SynthesisThemeFields } from "../models/import.model";
-import { Mapping, MappingField, MappingContent } from "../models/mapping.model";
+import { Mapping, MappingField, MappingContent, MappingName } from "../models/mapping.model";
 
 const urlApi = `${AppConfig.API_ENDPOINT}/${ModuleConfig.MODULE_URL}`;
 
@@ -94,9 +94,10 @@ export class DataService {
 
   renameMapping(idMapping, name): Observable<Mapping> {
     const url = `${urlApi}/mappings/${idMapping}/name`;
-    let fd = new FormData();
-    fd.append("name", name);
-    return this._http.post<Mapping>(url, fd);
+    let json: MappingName = {
+      name: name,
+    };
+    return this._http.post<Mapping>(url, json);
   }
 
   deleteImport(importId: number): Observable<void> {
