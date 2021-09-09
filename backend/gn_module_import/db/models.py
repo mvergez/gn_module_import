@@ -5,7 +5,7 @@ import chardet
 from flask import current_app
 import sqlalchemy as sa
 from sqlalchemy import Column, DateTime, String, Integer, ForeignKey, func, PrimaryKeyConstraint
-from sqlalchemy.orm import relationship, deferred
+from sqlalchemy.orm import relationship, deferred, backref
 from sqlalchemy.types import ARRAY
 from sqlalchemy import and_, or_, all_, any_, true, false
 from werkzeug.exceptions import Forbidden
@@ -303,7 +303,9 @@ class TMappingsFields(DB.Model):
 
     id_match_fields = DB.Column(DB.Integer, primary_key=True, autoincrement=True)  # TODO rename this to pk or id…
     id_mapping = DB.Column(DB.Integer, db.ForeignKey(TMappings.id_mapping), nullable=False)
-    mapping = relationship("TMappings", backref="fields")
+    mapping = relationship("TMappings", 
+                           backref=backref("fields",
+                                           cascade="all, delete-orphan"))
     source_field = DB.Column(DB.Unicode, nullable=False)
     target_field = DB.Column(DB.Unicode, db.ForeignKey(BibFields.name_field), nullable=False)
     target = relationship("BibFields")

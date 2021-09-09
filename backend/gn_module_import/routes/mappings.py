@@ -159,7 +159,7 @@ def delete_mapping(info_role, id_mapping):
         mapping.mapping_label = None
     else:
         db.session.commit()
-        db.session.delete(mapping)  # TODO: cascade child
+        db.session.delete(mapping)
     db.session.commit()
 
     # FIXME really usefull?
