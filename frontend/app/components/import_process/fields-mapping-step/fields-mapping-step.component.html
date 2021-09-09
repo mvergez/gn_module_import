@@ -306,7 +306,7 @@
     </div>
     <div class="modal-body">
         Attention, le modèle a été modifié, voulez-vous sauvegarder ces modifications ?
-        <form *ngIf="this.fieldMappingForm.value">
+        <form *ngIf="this.fieldMappingForm.value == null">
           <div class="form-group">
             <label for="mappingName">Nom du mapping</label>
             <input [formControl]="modalCreateMappingForm" class="form-control" id="mappingName" placeholder="Nom du mapping">
@@ -321,14 +321,14 @@
             (click)="modal.close(); submitMapping(false)"
         > Continuer sans enregistrer </button>
         <button
-            *ngIf="this.fieldMappingForm.value && this.createOrRenameMappingForm.value == ''"
+            *ngIf="this.fieldMappingForm.value != null"
             type="button"
             mat-raised-button
             color="primary"
             (click)="modal.close(); submitMapping(true)"
         > Mettre à jour le modèle existant </button>
         <button
-            *ngIf="this.fieldMappingForm.value == null || this.createOrRenameMappingForm.value != ''"
+            *ngIf="this.fieldMappingForm.value == null"
             type="button"
             mat-raised-button
             color="primary"
