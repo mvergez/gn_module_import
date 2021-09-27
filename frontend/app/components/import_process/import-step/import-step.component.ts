@@ -28,6 +28,20 @@ export class ImportStepComponent implements OnInit {
     public nbLignes: string = "X";
     public nbError: number;
     public nbWarning: number;
+    public errorList: [{
+        id_user_errr: number,
+        id_import: number,
+        error_type: string,
+        error_name: string,
+        error_level: string,
+        error_description: string,
+        column_error: string,
+        id_rows: Array<String>,
+        comment: string,
+        show?: boolean  // to show all the lines in table  
+    }];
+    public maxErrorDisplay: number = 5;
+    public maxErrorsLines: number = 10;
 
     @ViewChild("modalRedir") modalRedir: any;
 
@@ -49,8 +63,14 @@ export class ImportStepComponent implements OnInit {
 
         this.getValidData();
         this._ds.getErrorList(this.idImport).subscribe(errorList => {
-            this.nbError = errorList.errors.filter(error => error.error_level == "ERROR").length
-            this.nbWarning = errorList.errors.filter(error => error.error_level == "WARNING").length
+            // Add property to show errors lines. Need to do this to
+                // show line per line...
+            this.errorList = errorList.errors
+            this.errorList.forEach(element => {
+                    element.show = false
+                });
+            this.nbError = this.errorList.filter(error => error.error_level == "ERROR").length
+            this.nbWarning = this.errorList.filter(error => error.error_level == "WARNING").length
         });
 
     }

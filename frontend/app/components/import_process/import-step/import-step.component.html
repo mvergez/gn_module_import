@@ -30,9 +30,6 @@
                     >
                         Aucune erreur à afficher
                     </div>
-
-                    <div *ngIf="nbError > 0"> {{nbError}} erreur(s) </div>
-                    <div *ngIf="nbWarning > 0"> {{nbWarning}} avertissement(s) </div>
                     </div>
                     <div
                         *ngIf="nInvalidData > 0"
@@ -44,7 +41,54 @@
                             (click)="_csvExport.onCSV(idImport)"
                         > Exporter vos {{nInvalidData}} observations invalides </button>
                     </div>
-
+                    <div *ngIf="nbError > 0 || nbWarning > 0" class='content-report error-table'>
+                        <mat-expansion-panel [expanded]="nbError < maxErrorDisplay">
+                            <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <div *ngIf="nbError > 0"> {{nbError}} erreur(s) </div>
+                                <div *ngIf="nbWarning > 0"> {{nbWarning}} avertissement(s)</div>
+                            </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Type d'erreur</th>
+                                        <th>Champ</th>
+                                        <th>Description erreur</th>
+                                        <th>Nombre d'erreur(s)</th>
+                                        <th>Numéro des lignes en erreur </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let i of errorList">
+                                        <td> {{i.error_type}} </td>
+                                        <td> {{i.column_error}} </td>
+                                        <td> {{i.error_description}} <i> <br> {{i.comment}}</i> </td>
+                                        <td> <span *ngIf="i?.id_rows && i?.id_rows.length > 0">{{i?.id_rows.length}} </span>  </td>
+                                        <td> 
+                                            <span *ngIf="i.id_rows.length>=10 && !i.show">{{i.id_rows.slice(0, maxErrorsLines).join(', ')}} ...
+                                                <button 
+                                                    mat-icon-button 
+                                                    matTooltip="Voir plus"
+                                                    (click)="i.show=!i.show">
+                                                    <mat-icon>expand_more</mat-icon>
+                                                </button>
+                                            </span>
+                                            <span *ngIf="i.id_rows.length<=10 || i.show">{{i.id_rows.join(', ')}}
+                                                <button 
+                                                    mat-icon-button 
+                                                    matTooltip="Voir moins"
+                                                    *ngIf="i.id_rows.length>=10" 
+                                                    (click)="i.show=!i.show">
+                                                    <mat-icon>expand_less</mat-icon>
+                                                </button>   
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </mat-expansion-panel>
+                    </div>
                 </div>
             </div>
         </div>
